@@ -43,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
         book_author = new ArrayList<>();
         book_page = new ArrayList<>();
         customAdapter = new CustomAdapter(MainActivity.this, this, book_id, book_title, book_page, book_author);
-        recyclerView.setAdapter(customAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        setAdapter();
 
 
         addBook.setOnClickListener(view -> {
@@ -66,9 +65,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("saveBook", "displayData:book_author " + book_author.toString());
                     Log.d("saveBook", "displayData:book_title " + book_title.toString());
                 }
-            } else {
-
             }
+            setAdapter();
         }
     }
 
@@ -91,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "no results found", Snackbar.LENGTH_SHORT).show();
             }
+            setAdapter();
         }
     }
 
@@ -170,6 +169,13 @@ public class MainActivity extends AppCompatActivity {
         db.deleteAll();
         recreate();
     }
+
+    private void setAdapter(){
+        recyclerView.setAdapter(customAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+    }
+
+
 
 
 }
