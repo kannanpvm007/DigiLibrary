@@ -1,4 +1,4 @@
-package com.blogspot.booklibrarysqllitejava;
+package com.blogspot.digiLibrary;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     CustomAdapter customAdapter;
     private ArrayList<String> book_id, book_title, book_author, book_page;
+    private ArrayList<byte[]> imageBye;
+    private TextView showAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +41,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recycler);
         addBook = findViewById(R.id.addBook);
+        showAll = findViewById(R.id.showAll);
         db = new MyDatabaseHelper(MainActivity.this);
         book_id = new ArrayList<>();
         book_title = new ArrayList<>();
         book_author = new ArrayList<>();
         book_page = new ArrayList<>();
-        customAdapter = new CustomAdapter(MainActivity.this, this, book_id, book_title, book_page, book_author);
+        imageBye = new ArrayList<byte[]>();
+        customAdapter = new CustomAdapter(MainActivity.this, this, book_id, book_title, book_page, book_author,imageBye);
         setAdapter();
 
 
@@ -50,11 +56,22 @@ public class MainActivity extends AppCompatActivity {
             Intent in = new Intent(MainActivity.this, AddBookActivity.class);
             startActivityForResult(in,2);
         });
+        showAll.setOnClickListener(view -> {
+            displayData();
+        });
         displayData();
     }
 
     void displayData() {
         Cursor c = db.getAllBooks();
+        book_id.clear();
+        book_title.clear();
+        book_author.clear();
+        book_page.clear();
+        imageBye.clear();
+        showAll.setVisibility(View.GONE);
+        addBook.setVisibility(View.VISIBLE);
+
         if (c != null) {
             if (c.getCount() > 0) {
                 while (c.moveToNext()) {
@@ -62,8 +79,11 @@ public class MainActivity extends AppCompatActivity {
                     book_title.add(c.getString(1));
                     book_author.add(c.getString(2));
                     book_page.add(c.getString(3));
+                    @SuppressLint("Range") byte[] blob = c.getBlob(4);
+                    imageBye.add(blob);
                     Log.d("saveBook", "displayData:book_author " + book_author.toString());
                     Log.d("saveBook", "displayData:book_title " + book_title.toString());
+                    Log.d("saveBook", "displayData:blob " + blob);
                 }
             }
             setAdapter();
@@ -74,15 +94,20 @@ public class MainActivity extends AppCompatActivity {
         Cursor c = db.getAllBooksById(id);
         if (c != null) {
             if (c.getCount() > 0) {
+                showAll.setVisibility(View.VISIBLE);
+                addBook.setVisibility(View.GONE);
                 book_id.clear();
                 book_title.clear();
                 book_author.clear();
                 book_page.clear();
+                imageBye.clear();
                 while (c.moveToNext()) {
                     book_id.add(c.getString(0));
                     book_title.add(c.getString(1));
                     book_author.add(c.getString(2));
                     book_page.add(c.getString(3));
+                    @SuppressLint("Range") byte[] blob = c.getBlob(4);
+                    imageBye.add(blob);
                     Log.d("saveBook", "displayData:book_author " + book_author.toString());
                     Log.d("saveBook", "displayData:book_title " + book_title.toString());
                 }

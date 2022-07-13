@@ -1,4 +1,4 @@
-package com.blogspot.booklibrarysqllitejava;
+package com.blogspot.digiLibrary;
 
 import org.junit.Test;
 

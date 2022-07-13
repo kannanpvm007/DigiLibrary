@@ -1,4 +1,4 @@
-package com.blogspot.booklibrarysqllitejava;
+package com.blogspot.digiLibrary;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,6 +18,7 @@ class MyDatabaseHelper extends SQLiteOpenHelper {
     public static String COLUMN_TITLE = "book_title";
     public static String COLUMN_AUTHOR = "book_author";
     public static String COLUMN_PAGE = "book_page";
+    public static String COLUMN_IMAGE= "book_image";
 
     private Context context;
 
@@ -32,7 +33,7 @@ class MyDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         Log.d(TAG, "onCreate: db creation");
 
-        String createBookTable = "CREATE TABLE " + TABLE_NAME + " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_TITLE + " TEXT , " + COLUMN_AUTHOR + " TEXT, " + COLUMN_PAGE + " INTEGER );";
+        String createBookTable = "CREATE TABLE " + TABLE_NAME + " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_TITLE + " TEXT , " + COLUMN_AUTHOR + " TEXT, " + COLUMN_PAGE + " INTEGER, "+COLUMN_IMAGE+" BLOB );";
         Log.d(TAG, "onCreate:createBookTable= " + createBookTable);
         sqLiteDatabase.execSQL(createBookTable);
     }
@@ -46,13 +47,16 @@ class MyDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public Boolean saveBook(String bookTitle, String author, int page) {
+    public Boolean saveBook(String bookTitle, String author, int page,byte[] imageBytes) {
         Log.d(TAG, "saveBook: bookTitle " + bookTitle + " author " + author + " page-> " + page);
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_TITLE, bookTitle);
         cv.put(COLUMN_AUTHOR, author);
         cv.put(COLUMN_PAGE, page);
+        if (imageBytes != null){
+            cv.put(COLUMN_IMAGE, imageBytes);
+        }
         Log.d(TAG, "saveBook:cv----> " + cv.toString());
         long result = db.insert(TABLE_NAME, null, cv);
         if (result == -1) {
@@ -75,12 +79,15 @@ class MyDatabaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    Boolean update(int id, String title, String author, String page) {
+    Boolean update(int id, String title, String author, String page, byte[] imageBytes) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_TITLE, title);
         cv.put(COLUMN_AUTHOR, author);
         cv.put(COLUMN_PAGE, page);
+        if (imageBytes != null){
+            cv.put(COLUMN_IMAGE, imageBytes);
+        }
         long result = db.update(TABLE_NAME, cv, "_id=?", new String[]{String.valueOf(id)});
         if (result == -1) {
             return false;

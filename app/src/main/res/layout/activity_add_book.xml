@@ -46,9 +46,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bookAuthor" />
+    <ImageView
+        android:id="@+id/addImage"
+
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Number of Page"
+        android:inputType="number"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/ic_baseline_add_photo_alternate_24"
+        app:layout_constraintTop_toBottomOf="@+id/bookPage" />
 
     <Button
-        android:id="@+id/submite"
+        android:id="@+id/submit"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,7 +73,7 @@
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bookPage" />
+        app:layout_constraintTop_toBottomOf="@+id/addImage" />
     <Button
         android:id="@+id/delete"
 
@@ -74,5 +88,5 @@
         android:backgroundTint="#D81212"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submite" />
+        app:layout_constraintTop_toBottomOf="@+id/submit" />
 </androidx.constraintlayout.widget.ConstraintLayout>
